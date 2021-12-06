@@ -13,7 +13,7 @@ func (e ErrorChecker) HasError(err interface{}) ErrorChecker {
 	return e
 }
 
-func (e ErrorChecker) Fatal(msg string) {
+func (e ErrorChecker) Fatal(msg string) bool {
 	var message string
 	message = msg
 	if msg == "" {
@@ -22,9 +22,10 @@ func (e ErrorChecker) Fatal(msg string) {
 	for err := range e.Errors {
 		log.Fatalf("%v: %v", message, err)
 	}
+	return len(e.Errors) > 0
 }
 
-func (e ErrorChecker) Info(msg string) {
+func (e ErrorChecker) Info(msg string) bool {
 	var message string
 	message = msg
 	if msg == "" {
@@ -34,4 +35,5 @@ func (e ErrorChecker) Info(msg string) {
 	for err := range e.Errors {
 		log.Printf("%v : %v", message, err)
 	}
+	return len(e.Errors) > 0
 }
