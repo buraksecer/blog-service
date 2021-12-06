@@ -11,6 +11,7 @@ import (
 	"net"
 	"strconv"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -37,14 +38,18 @@ func (*server) CreateBlog(ctx context.Context, req *blogpb.CreateBlogRequest) (r
 	}
 
 	result, err := mongoclient.BlogCollection.InsertOne(context.TODO(), data)
-
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Internal server error : %v", err))
 	}
 
-	blog.Id = result.InsertedID.(string)
+	oid := result.InsertedID.(primitive.ObjectID)
 	return &blogpb.CreateBlogResponse{
-		Blog: blog,
+		Blog: &blogpb.Blog{
+			Id:       oid.String(),
+			AuthorId: blog.GetAuthorId(),
+			Title:    blog.GetTitle(),
+			Content:  blog.GetContent(),
+		},
 	}, nil
 }
 
