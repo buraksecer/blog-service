@@ -1,6 +1,7 @@
 package blogserver
 
 import (
+	"context"
 	"fmt"
 	"go-blog-service/blogpb"
 	"go-blog-service/utils"
@@ -18,7 +19,7 @@ type server struct{}
 
 var errorChecker utils.ErrorChecker
 
-func StartServer() {
+func StartServer(ctx context.Context) {
 	errorChecker = utils.NewErrorChecker()
 	fmt.Printf("Starting Blog Server...\nListening port %v \n", port)
 	listener, err := net.Listen("tcp", "0.0.0.0:"+strconv.Itoa(port))
