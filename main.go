@@ -9,7 +9,7 @@ import (
 
 func main() {
 	ch := make(chan os.Signal, 1)
-	ctx := context.Background()
+	ctx := context.TODO()
 	go func(c context.Context) {
 		blogserver.StartServer(c)
 	}(ctx)
