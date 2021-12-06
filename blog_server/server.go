@@ -2,9 +2,10 @@ package blogserver
 
 import (
 	"context"
-	"fmt"
+	mongoclient "go-blog-service/blog_server/mongo_client"
 	"go-blog-service/blogpb"
 	"go-blog-service/utils"
+	"log"
 	"net"
 	"strconv"
 
@@ -20,8 +21,10 @@ type server struct{}
 var errorChecker utils.ErrorChecker
 
 func StartServer(ctx context.Context) {
-	errorChecker = utils.NewErrorChecker()
-	fmt.Printf("Starting Blog Server...\nListening port %v \n", port)
+	log.Printf("Starting Blog Server... Listening port %v", port)
+	mongoclient.StartMongoClient()
+	defer mongoclient.CloseConnection()
+
 	listener, err := net.Listen("tcp", "0.0.0.0:"+strconv.Itoa(port))
 
 	errorChecker.HasError(err).Fatal("")
