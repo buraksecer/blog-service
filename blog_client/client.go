@@ -1,0 +1,5 @@
+package blogclient
+
+func StartClient() {
+
+}

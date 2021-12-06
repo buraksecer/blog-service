@@ -1,0 +1,5 @@
+package blogserver
+
+func StartServer() {
+
+}
