@@ -6,11 +6,6 @@ type ErrorChecker struct {
 	Errors []interface{}
 }
 
-func NewErrorChecker() ErrorChecker {
-	e := ErrorChecker{}
-	return e
-}
-
 func (e ErrorChecker) HasError(err interface{}) ErrorChecker {
 	if err != nil {
 		e.Errors = append(e.Errors, err)
