@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	blogclient "go-blog-service/blog_client"
 	blogserver "go-blog-service/blog_server"
 	"os"
 	"os/signal"
@@ -14,6 +15,7 @@ func main() {
 		blogserver.StartServer(c)
 	}(ctx)
 
+	blogclient.StartClient()
 	signal.Notify(ch, os.Interrupt)
 	<-ch
 }
