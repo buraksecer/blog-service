@@ -6,6 +6,7 @@ import (
 	blogserver "go-blog-service/blog_server"
 	"os"
 	"os/signal"
+	"time"
 )
 
 func main() {
@@ -15,6 +16,7 @@ func main() {
 		blogserver.StartServer(c)
 	}(ctx)
 
+	time.Sleep(time.Second * 5)
 	blogclient.StartClient()
 	signal.Notify(ch, os.Interrupt)
 	<-ch
