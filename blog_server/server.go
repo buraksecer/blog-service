@@ -11,6 +11,7 @@ import (
 	"net"
 	"strconv"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -49,6 +50,25 @@ func (*server) CreateBlog(ctx context.Context, req *blogpb.CreateBlogRequest) (r
 			AuthorId: blog.GetAuthorId(),
 			Title:    blog.GetTitle(),
 			Content:  blog.GetContent(),
+		},
+	}, nil
+}
+
+func (*server) ReadBlog(ctx context.Context, req *blogpb.ReadBlogRequest) (*blogpb.ReadBlogResponse, error) {
+	blogId, err := primitive.ObjectIDFromHex(req.GetBlogId())
+	errorChecker.HasError(err).Fatal("Invalid argument")
+
+	data := &models.Blog{}
+	filter := bson.D{{"_id", blogId}}
+	findErr := mongoclient.BlogCollection.FindOne(context.Background(), filter).Decode(data)
+	errorChecker.HasError(findErr).Info("Couldn't find blog with given BlogId")
+
+	return &blogpb.ReadBlogResponse{
+		Blog: &blogpb.Blog{
+			Id:       data.Id.String(),
+			AuthorId: data.AuthorId,
+			Title:    data.Title,
+			Content:  data.Content,
 		},
 	}, nil
 }
